@@ -1,0 +1,19 @@
+{
+  "Kestrel": {
+    "Endpoints": {
+      "Default": {
+        "Url": "http://0.0.0.0:8088"
+      }
+    }
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Trace",
+      "Microsoft": "Warning",
+      "System": "Warning"
+    }
+  },
+  "GameFolderMatchTrackerOptions": {
+    "GameProfileFolder": "C:/Program Files (x86)/Steam/steamapps/common/Hunt Showdown/user/profiles/default"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "HunsterService": {
+      "commandName": "Project",
+      "commandLineArgs": ""
+    }
+  }
+}
