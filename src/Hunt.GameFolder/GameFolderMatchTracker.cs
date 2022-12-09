@@ -1,4 +1,5 @@
 using Hunt.GameFolder.Channels;
+using Hunt.Utils;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Polly;
@@ -47,6 +48,9 @@ namespace Hunt.GameFolder
             watcher.Changed += HandleFileChangeEvent;
             watcher.EnableRaisingEvents = true;
 
+            Match matchPrevious = null;
+            Match match = null;
+
             while (true)
             {
                 // Wait for change event
@@ -61,10 +65,19 @@ namespace Hunt.GameFolder
 
                 try
                 {
-                    var match = await GetLastMatchAsync(token);
-                    var matchChangedCallback = OnMatchChanged;
+                    matchPrevious = match;
+                    match = await GetLastMatchAsync(token);
+
+                    if (matchPrevious != null && 
+                        matchPrevious.MissionVersion == match.MissionVersion)
+                    {
+                        // Skip update if mission version didn't change
+                        continue;
+                    }
 
                     _logger.LogInformation("Notifying subscribers");
+
+                    var matchChangedCallback = OnMatchChanged;
 
                     if (matchChangedCallback != null)
                     {
@@ -111,12 +124,12 @@ namespace Hunt.GameFolder
                     using var attributesFile = File.Open(attributesFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 
                     var missionBag = await GameFolderAttributesFileSerializer.DeserializeAsync(attributesFile, token);
-                    var missionBagFileDate = File.GetLastWriteTimeUtc(attributesFile.SafeFileHandle);
+                    var missionBagVersion = MissionBagUtils.GetMissionHash(missionBag);
 
                     return new Match
                     {
                         MissionBag = missionBag,
-                        MissionVersion = $"{missionBagFileDate.Ticks}"
+                        MissionVersion = missionBagVersion
                     };
                 }
 

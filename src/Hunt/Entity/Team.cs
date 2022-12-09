@@ -1,4 +1,4 @@
-namespace Hunt
+namespace Hunt.Entity
 {
     public class Team
     {

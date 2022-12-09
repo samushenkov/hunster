@@ -1,4 +1,5 @@
 using System.Xml;
+using Hunt.Entity;
 
 namespace Hunt.GameFolder
 {

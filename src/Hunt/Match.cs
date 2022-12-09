@@ -1,4 +1,5 @@
-﻿
+﻿using Hunt.Entity;
+
 namespace Hunt
 {
     public class Match

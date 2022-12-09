@@ -15,7 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\Common.Hosting\Common.Hosting.csproj" />
-    <ProjectReference Include="..\Hunt.Core\Hunt.GameFolder.csproj" />
+    <ProjectReference Include="..\Hunt.GameFolder\Hunt.GameFolder.csproj" />
   </ItemGroup>
 
 </Project>
