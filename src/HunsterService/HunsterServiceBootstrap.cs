@@ -58,7 +58,8 @@ namespace HunsterService
 
                 // Read custom configuration mappings
                 var argsMappings = DictionaryUtils.Union(
-                    CommandLineAliasUtils.GetMappings<GameFolderMatchTrackerOptions>()
+                    CommandLineAliasUtils.GetMappings<GameFolderMatchTrackerOptions>(),
+                    CommandLineAliasUtils.GetMappings<MatchTrackerServiceOptions>()
                 );
 
                 // Override with commnad line
@@ -118,7 +119,8 @@ namespace HunsterService
             services.AddTransient<IMatchEmitter>(p => p.GetRequiredService<GameFolderMatchTracker>());
             #endregion
 
-            #region [Services]
+            #region [MatchTrackerService]
+            services.ConfigureByName<MatchTrackerServiceOptions>();
             services.AddHostedService<MatchTrackerService>();
             #endregion
         }

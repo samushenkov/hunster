@@ -56,12 +56,12 @@ namespace Hunt.GameFolder
                 // Wait for change event
                 await changeEventChannel.Reader.ReadAsync(token);
 
-                _logger.LogInformation("File has been changed");
+                _logger.LogDebug("File has been changed");
 
                 // Wait for change event
                 await changeEventChannel.Reader.SkipAsync(TimeSpan.FromSeconds(1), token);
 
-                _logger.LogInformation("File has been changed. Getting the last match available");
+                _logger.LogDebug("File has been changed. Getting the last match available");
 
                 try
                 {
@@ -75,7 +75,7 @@ namespace Hunt.GameFolder
                         continue;
                     }
 
-                    _logger.LogInformation("Notifying subscribers");
+                    _logger.LogDebug("Notifying subscribers");
 
                     var matchChangedCallback = OnMatchChanged;
 
