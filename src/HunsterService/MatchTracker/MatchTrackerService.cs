@@ -23,11 +23,18 @@ namespace HunsterService.MatchTracker
 
             try
             {
-                var matchPrevious = await _matchTracker.GetLastMatchAsync(token);
-
-                if (matchPrevious != null)
+                try
                 {
-                    LogLastMatch(matchPrevious);
+                    var matchPrevious = await _matchTracker.GetLastMatchAsync(token);
+
+                    if (matchPrevious != null)
+                    {
+                        LogLastMatch(matchPrevious);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Unable to get last match");
                 }
 
                 // Listen for realtime udpates untill token is cancelled

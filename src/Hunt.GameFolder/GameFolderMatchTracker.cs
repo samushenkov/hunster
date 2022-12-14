@@ -35,7 +35,7 @@ namespace Hunt.GameFolder
             if (options == null || 
                 options.GameProfileFolder == null)
             {
-                throw new InvalidOperationException("Configuration is missing.");
+                throw new GameFolderException("Configuration is missing.");
             }
 
             using var watcher = new FileSystemWatcher(options.GameProfileFolder, ATTRIBUTES_FILE)
@@ -112,7 +112,7 @@ namespace Hunt.GameFolder
             if (options == null || 
                 options.GameProfileFolder == null)
             {
-                throw new InvalidOperationException("Configuration is missing.");
+                throw new GameFolderException("Configuration is missing.");
             }
 
             var attributesFilePath = Path.Combine(options.GameProfileFolder, ATTRIBUTES_FILE);
@@ -135,9 +135,13 @@ namespace Hunt.GameFolder
 
                 return await _retryPolicy.ExecuteAsync(ParseAttributesAssync);
             }
+            catch (GameFolderAttributeException)
+            {
+                throw;
+            }
             catch (Exception ex)
             {
-                throw new InvalidOperationException("Unable to read game profile attributes.", ex);
+                throw new GameFolderException("Unable to parse attributes file", ex);
             }
         }
 

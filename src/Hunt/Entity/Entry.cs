@@ -11,7 +11,6 @@ namespace Hunt.Entity
         public string IconPath2 { get; set; }
         public int Reward { get; set; }
         public int RewardSize { get; set; }
-        public string UiNam2 { get; set; }
         public string UiName { get; set; }
         public string UiName2 { get; set; }
     }

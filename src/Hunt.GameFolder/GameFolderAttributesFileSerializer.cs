@@ -1,5 +1,5 @@
-using System.Xml;
 using Hunt.Entity;
+using System.Xml;
 
 namespace Hunt.GameFolder
 {
@@ -51,13 +51,25 @@ namespace Hunt.GameFolder
 
             if (missionBagVersion != 6)
             {
-                throw new InvalidDataException("Attributes version is not supported");
+                throw new GameFolderAttributeValueException<int>("MissionBagTeamDetailsVersion", missionBagVersion);
             }
 
             var missionBag = new MissionBag
             {
+                FbeGoldBonus = ParseInteger(store, "MissionBagFbeGoldBonus"),
+                FbeHunterXpBonus = ParseInteger(store, "MissionBagFbeHunterXpBonus"),
+
+                IsFbeBonusEnabled = ParseBoolean(store, "MissionBagIsFbeBonusEnabled"),
                 IsHunterDead = ParseBoolean(store, "MissionBagIsHunterDead"),
                 IsQuickPlay = ParseBoolean(store, "MissionBagIsQuickPlay"),
+
+                WasDeathlessUsed = ParseBoolean(store, "MissionBagWasDeathlessUsed"),
+
+                Boss0 = ParseBoolean(store, "MissionBagBoss_0"),
+                Boss1 = ParseBoolean(store, "MissionBagBoss_1"),
+                Boss2 = ParseBoolean(store, "MissionBagBoss_2"),
+                Boss3 = ParseBoolean(store, "MissionBagBoss_3"),
+
                 Teams = ParseTeams(store),
                 Accolades = ParseAccoladeEntries(store),
                 Entries = ParseEntries(store)
@@ -97,7 +109,6 @@ namespace Hunt.GameFolder
                 IconPath2 = ParseString(store, $"MissionBagEntry_{entryIndex}_iconPath2"),
                 Reward = ParseInteger(store, $"MissionBagEntry_{entryIndex}_reward"),
                 RewardSize = ParseInteger(store, $"MissionBagEntry_{entryIndex}_rewardSize"),
-                UiNam2 = ParseString(store, $"MissionBagEntry_{entryIndex}_uiNam2"),
                 UiName = ParseString(store, $"MissionBagEntry_{entryIndex}_uiName"),
                 UiName2 = ParseString(store, $"MissionBagEntry_{entryIndex}_uiName2")
             };
@@ -237,52 +248,37 @@ namespace Hunt.GameFolder
             return player;
         }
 
-        private static string ParseString(IDictionary<string, string> store, string key, string defaultValue = null)
+        private static string ParseString(IDictionary<string, string> store, string key, string defaultValue = default)
         {
             var valueExists = store.TryGetValue(key, out var value);
 
             if (valueExists == false)
             {
-                if (defaultValue != null)
-                {
-                    return defaultValue;
-                }
-
-                throw new InvalidDataException("Attribute doesn't exist");
+                return defaultValue;
             }
 
             return value;
         }
 
-        private static bool ParseBoolean(IDictionary<string, string> store, string key, bool? defaultValue = null)
+        private static bool ParseBoolean(IDictionary<string, string> store, string key, bool defaultValue = default)
         {
             var valueExists = store.TryGetValue(key, out var value);
 
             if (valueExists == false)
             {
-                if (defaultValue.HasValue)
-                {
-                    return defaultValue.Value;
-                }
-
-                throw new InvalidDataException("Attribute doesn't exist");
+                return defaultValue;
             }
 
             return bool.Parse(value);
         }
 
-        private static int ParseInteger(IDictionary<string, string> store, string key, int? defaultValue = null)
+        private static int ParseInteger(IDictionary<string, string> store, string key, int defaultValue = default)
         {
             var valueExists = store.TryGetValue(key, out var value);
 
             if (valueExists == false)
             {
-                if (defaultValue.HasValue)
-                {
-                    return defaultValue.Value;
-                }
-
-                throw new InvalidDataException("Attribute doesn't exist");
+                return defaultValue;
             }
 
             return int.Parse(value);
