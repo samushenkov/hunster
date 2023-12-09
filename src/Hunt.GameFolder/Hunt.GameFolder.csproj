@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="$(ModulesPath)\dotnet-common\src\Common\Common.csproj" />
     <ProjectReference Include="..\Hunt\Hunt.csproj" />
   </ItemGroup>
 

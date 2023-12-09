@@ -1,42 +1,50 @@
-﻿using Common.Configuration.CommandLine;
-using Common.Dictionary;
-using Common.Hosting.Configuration;
+﻿using Common.Hosting.Configuration;
 using HunsterService.Cors;
 using HunsterService.MatchTracker;
 using HunsterService.Swagger;
 using Hunt;
 using Hunt.GameFolder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 
 namespace HunsterService
 {
     internal class HunsterServiceBootstrap
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             try
             {
                 var hostBuilder = new HostBuilder();
 
-                ConfigureHost(hostBuilder, args);
-                ConfigureWebHost(hostBuilder);
-
-                var host = hostBuilder.Build();
-
-                var hostLogger = host.Services.GetRequiredService<ILogger<HunsterServiceBootstrap>>();
-                var hostEnvironment = host.Services.GetRequiredService<IHostEnvironment>();
-
-                try
+                hostBuilder.ConfigureWebHost(webHostBuilder =>
                 {
-                    hostLogger.LogInformation("Service [{appName}] started in [{envName}] environment", hostEnvironment.ApplicationName, hostEnvironment.EnvironmentName);
-                    host.Run();
-                }
-                catch (Exception ex)
+                    ConfigureHost(hostBuilder, args);
+                    ConfigureWebHost(webHostBuilder);
+                });
+
+                using (var host = hostBuilder.Build())
                 {
-                    hostLogger.LogCritical(ex, "Program stopped with error");
-                }
-                finally
-                {
-                    hostLogger.LogInformation("Service stopped");
+                    var hostLogger = host.Services.GetRequiredService<ILogger<HunsterServiceBootstrap>>();
+                    var hostEnvironment = host.Services.GetRequiredService<IHostEnvironment>();
+
+                    hostLogger.LogInformation("Service [{appName}] started in [{envName}] environment",
+                        hostEnvironment.ApplicationName,
+                        hostEnvironment.EnvironmentName
+                    );
+
+                    try
+                    {
+                        await host.StartAsync();
+                        await host.WaitForShutdownAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        hostLogger.LogCritical(ex, "Program stopped with error");
+                    }
+                    finally
+                    {
+                        hostLogger.LogInformation("Service stopped");
+                    }
                 }
             }
             catch (Exception ex)
@@ -55,15 +63,6 @@ namespace HunsterService
 
                 // File configuration
                 builder.AddJsonFile("HunsterService.json", true);
-
-                // Read custom configuration mappings
-                var argsMappings = DictionaryUtils.Union(
-                    CommandLineAliasUtils.GetMappings<GameFolderMatchTrackerOptions>(),
-                    CommandLineAliasUtils.GetMappings<MatchTrackerServiceOptions>()
-                );
-
-                // Override with commnad line
-                builder.AddCommandLine(args, argsMappings);
             });
 
             hostBuilder.ConfigureServices((context, services) =>
@@ -75,39 +74,34 @@ namespace HunsterService
 
                     // Register loggers
                     builder.AddConsole();
+                    builder.AddEventLog();
                 });
 
-                // Configure services
+                // Configure generic services
                 ConfigureServices(context, services);
             });
 
             hostBuilder.UseWindowsService();
         }
 
-        static void ConfigureWebHost(IHostBuilder hostBuilder)
+        static void ConfigureWebHost(IWebHostBuilder webHostBuilder)
         {
-            hostBuilder.ConfigureWebHost(webHostBuilder =>
-            {
-                // Use Kestrel to handle requests
-                webHostBuilder.UseKestrel((context, options) =>
-                {
-                    options.Configure(context.Configuration.GetSection("Kestrel"), reloadOnChange: true);
-                });
+            // Use Kestrel to handle requests
+            webHostBuilder.UseKestrel((context, options) =>
+                options.Configure(context.Configuration.GetSection("Kestrel"), reloadOnChange: true)
+            );
 
-                // Custom configuration
-                webHostBuilder.UseSetting(WebHostDefaults.PreventHostingStartupKey, "true");
-                webHostBuilder.UseSetting(WebHostDefaults.ServerUrlsKey, "");
-                webHostBuilder.UseSetting(WebHostDefaults.WebRootKey, "Web");
+            // Configure web host services
+            webHostBuilder.ConfigureServices(ConfigureWebServices);
 
-                // Configure web host services
-                webHostBuilder.ConfigureServices((context, services) =>
-                {
-                    ConfigureWebServices(context, services);
-                });
+            // Configure application
+            webHostBuilder.Configure(ConfigureWebApplication);
 
-                // Configure application
-                webHostBuilder.Configure(ConfigureWebApplication);
-            });
+            // Custom configuration
+            webHostBuilder.UseSetting(WebHostDefaults.ApplicationKey, null);
+            webHostBuilder.UseSetting(WebHostDefaults.PreventHostingStartupKey, "true");
+            webHostBuilder.UseSetting(WebHostDefaults.ServerUrlsKey, "");
+            webHostBuilder.UseSetting(WebHostDefaults.WebRootKey, "Web");
         }
 
         static void ConfigureServices(HostBuilderContext context, IServiceCollection services)
@@ -128,10 +122,9 @@ namespace HunsterService
         static void ConfigureWebServices(WebHostBuilderContext context, IServiceCollection services)
         {
             services.AddControllers();
-            services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
 
-            services.AddCors((options) =>
+            services.Configure<CorsOptions>(( options) =>
             {
                 options.AddPolicy(CorsPolicies.HUNSTER_ENDPOINT, (policyBuilder) =>
                 {

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net7.0-windows</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj" />
-    <ProjectReference Include="..\Common.Hosting\Common.Hosting.csproj" />
+    <ProjectReference Include="$(ModulesPath)\dotnet-common\src\Common\Common.csproj" />
+    <ProjectReference Include="$(ModulesPath)\dotnet-common\src\Common.Hosting\Common.Hosting.csproj" />
     <ProjectReference Include="..\Hunt.GameFolder\Hunt.GameFolder.csproj" />
   </ItemGroup>
 
