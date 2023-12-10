@@ -3,19 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hunt", "Hunt\Hunt.csproj", "{FD3FEF67-07A3-436A-BE34-9643C0E60C2A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hunt", "src\Hunt\Hunt.csproj", "{FD3FEF67-07A3-436A-BE34-9643C0E60C2A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HunsterService", "HunsterService\HunsterService.csproj", "{A3D0E569-2CBE-4CC8-82FF-5D32874DEFD4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HunsterService", "src\HunsterService\HunsterService.csproj", "{A3D0E569-2CBE-4CC8-82FF-5D32874DEFD4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hunt.GameFolder", "Hunt.GameFolder\Hunt.GameFolder.csproj", "{896A3A24-8CA9-4AE6-ABCC-E754A1B650BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hunt.GameFolder", "src\Hunt.GameFolder\Hunt.GameFolder.csproj", "{896A3A24-8CA9-4AE6-ABCC-E754A1B650BE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{86EBB726-CEFA-43BF-AD06-C1324C6AEDCB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hunt", "Hunt", "{6DD60F18-84FD-44B5-BAEA-7D2B9288FF2F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "..\modules\dotnet-common\src\Common\Common.csproj", "{45AABF5D-C983-4ABA-AEF5-CD9055D35E98}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "modules\dotnet-common\src\Common\Common.csproj", "{45AABF5D-C983-4ABA-AEF5-CD9055D35E98}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Hosting", "..\modules\dotnet-common\src\Common.Hosting\Common.Hosting.csproj", "{E7523B8A-086A-44F7-A14D-688D16D50445}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Hosting", "modules\dotnet-common\src\Common.Hosting\Common.Hosting.csproj", "{E7523B8A-086A-44F7-A14D-688D16D50445}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

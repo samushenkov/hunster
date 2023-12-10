@@ -18,4 +18,10 @@
     <ProjectReference Include="..\Hunt.GameFolder\Hunt.GameFolder.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="Web\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

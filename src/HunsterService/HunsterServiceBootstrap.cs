@@ -124,9 +124,9 @@ namespace HunsterService
             services.AddControllers();
             services.AddSwaggerGen();
 
-            services.Configure<CorsOptions>(( options) =>
+            services.Configure<CorsOptions>(options =>
             {
-                options.AddPolicy(CorsPolicies.HUNSTER_ENDPOINT, (policyBuilder) =>
+                options.AddPolicy(CorsPolicies.HUNSTER_ENDPOINT, policyBuilder =>
                 {
                     // allow development origin
                     policyBuilder.WithOrigins("http://localhost:3000");
