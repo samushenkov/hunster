@@ -1,5 +1,7 @@
 ﻿using Hunt;
+using Hunt.Entity;
 using Hunt.GameFolder;
+using Hunt.Utils;
 using Microsoft.Extensions.Options;
 
 namespace HunsterService.MatchTracker
@@ -56,19 +58,24 @@ namespace HunsterService.MatchTracker
                 return;
             }
 
-            var team = match.MissionBag.Teams.FirstOrDefault(t => t.OwnTeam);
+            var profileId = options.ProfileId;
+            var profile = default(Player);
 
-            if (team != null)
+            if (profileId != null)
             {
-                var teamPlayer = team.Players.FirstOrDefault(p => p.IsPartner == false);
+                profile = MissionBagUtils.GetPlayerById(match.MissionBag, profileId);
+            }
+            else
+            {
+                profile = MissionBagUtils.GetOwnPlayer(match.MissionBag);
+            }
 
-                if (teamPlayer != null)
-                {
-                    _logger.LogInformation("{username}: {mmr} mmr", 
-                        teamPlayer.BloodLineName, 
-                        teamPlayer.Mmr
-                    );
-                }
+            if (profile != null)
+            {
+                _logger.LogInformation("{username}: {mmr} mmr",
+                    profile.BloodLineName,
+                    profile.Mmr
+                );
             }
         }
     }

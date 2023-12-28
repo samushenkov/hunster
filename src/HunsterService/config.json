@@ -17,6 +17,7 @@
     "GameProfileFolder": "C:/Program Files (x86)/Steam/steamapps/common/Hunt Showdown/user/profiles/default"
   },
   "MatchTrackerServiceOptions": {
-    "LogMmr": true
+    "LogMmr": true,
+    "ProfileId": null
   }
 }

@@ -1,9 +1,9 @@
-﻿using System.Runtime.CompilerServices;
+﻿using Common.String;
+using Hunt.Entity;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Hunt.Entity;
 
 namespace Hunt.Utils
 {
@@ -26,30 +26,47 @@ namespace Hunt.Utils
             var bytes = Encoding.UTF8.GetBytes(data);
             var bytesHash = MD5.HashData(bytes);
 
-            return string.Create(bytesHash.Length * 2, bytesHash, static (chars, bytes) =>
-            {
-                for (var byteIndex = 0; byteIndex < bytes.Length; ++byteIndex)
-                {
-                    var chr = bytes[byteIndex];
-                    var chrIndex = byteIndex * 2;
-
-                    chars[chrIndex] = ToCharLower(chr >> 4);
-                    chars[chrIndex + 1] = ToCharLower(chr);
-                }
-            });
+            return StringUtils.ToHex(bytesHash);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static char ToCharLower(int value)
+        public static Player GetOwnPlayer(MissionBag missionBag)
         {
-            value &= 0xF;
-
-            if (value >= 10)
+            foreach (var team in missionBag.Teams)
             {
-                return (char)(value - 10 + 'a');
+                if (team.OwnTeam == false)
+                {
+                    continue;
+                }
+
+                foreach (var teamPlayer in team.Players)
+                {
+                    if (teamPlayer.ProximityToMe && 
+                        teamPlayer.IsPartner == false)
+                    {
+                        return teamPlayer;
+                    }
+                }
+
+                break;
             }
 
-            return (char)(value + '0');
+            return null;
+        }
+
+        public static Player GetPlayerById(MissionBag missionBag, string profileId)
+        {
+            foreach (var team in missionBag.Teams)
+            {
+                foreach (var teamPlayer in team.Players)
+                {
+                    if (teamPlayer.ProfileId == profileId)
+                    {
+                        return teamPlayer;
+                    }
+                }
+            }
+
+            return null;
         }
     }
 }

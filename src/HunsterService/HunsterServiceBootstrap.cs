@@ -62,7 +62,7 @@ namespace HunsterService
                 builder.AddEnvironmentVariables();
 
                 // File configuration
-                builder.AddJsonFile("HunsterService.json", true);
+                builder.AddJsonFile("config.json", true);
             });
 
             hostBuilder.ConfigureServices((context, services) =>

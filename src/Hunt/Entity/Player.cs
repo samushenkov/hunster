@@ -10,7 +10,6 @@ namespace Hunt.Entity
         public int DownedMe { get; set; }
         public int DownedTeammate { get; set; }
         public bool HadWellspring { get; set; }
-        public bool HadBounty { get; set; }
         public bool IsPartner { get; set; }
         public bool IsSoulSurvivor { get; set; }
         public int KilledByMe { get; set; }
@@ -19,7 +18,6 @@ namespace Hunt.Entity
         public int KilledTeammate { get; set; }
         public int Mmr { get; set; }
         public string ProfileId { get; set; }
-        public bool Proximity { get; set; }
         public bool ProximityToMe { get; set; }
         public bool ProximityToTeammate { get; set; }
         public bool SkillBased { get; set; }
